@@ -6,8 +6,56 @@
 </head>
 <body>
 
-    <h1>NASA Astronomy Picture of the Day</h1>
+    <main>
+        <h1>NASA Astronomy Picture of the Day</h1>
+
+        <p id="status">Cargando...</p>
+
+        <article id="apod"></article>
+    </main>
+
+    <script>
+        async function cargarAPOD() {
+
+    try {
+
+        const response = await fetch("/api/apod");
+
+        if (!response.ok) {
+            throw new Error("No se pudo obtener la imagen de NASA");
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        document.querySelector("#status").textContent = "";
+
+        document.querySelector("#apod").innerHTML = `
+            <h2>${data.title}</h2>
+
+            <p>${data.date}</p>
+
+            <img
+                src="${data.url}"
+                alt="${data.title}"
+                style="max-width: 100%;"
+            >
+
+            <p>${data.explanation}</p>
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.querySelector("#status").textContent =
+            "No se pudo cargar la información de NASA.";
+    }
+}
 
 
+        cargarAPOD();
+    </script>
 </body>
 </html>
